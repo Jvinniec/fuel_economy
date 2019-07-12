@@ -1,5 +1,9 @@
 # Ignore the VSCode files
 **/.vscode/
 
+# Ignore system files
+**/.DS_Store
+**/*~
+
 # Ignore checkpoint files
 **/*checkpoint.ipynb
