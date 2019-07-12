@@ -1,0 +1,5 @@
+# Ignore the VSCode files
+**/.vscode/
+
+# Ignore checkpoint files
+**/*checkpoint.ipynb
