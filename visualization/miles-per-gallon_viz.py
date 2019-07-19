@@ -1,12 +1,19 @@
 
 #%% [markdown]
 # ## Car and Real MPG over time
-# The following plot shows the distribution of miles-per-gallon (MPG) over time. 
-# I was able to record two different MPG values:
+# In the values that I recorded, I kept track of two different MPG values:
 # * **Car MPG**: The average MPG for a single tank as reported by my car's dashboard
 # * **Real MPG**: The MPG calculated by dividing the number of miles I drove 
 #   (reported by my car) divided by the number of gallons I put in after that
 #   drive
+#
+#
+# Basically this means that I had a measurement of the MPG value that my car was
+# telling me as well as the MPG value that I believed to be the 'true' value. 
+# To control for the amount of fuel, I would put the pump in, pump until it 
+# automatically clicked off, and pumped no more.
+#
+# So now that's out of the way, let's take a look at these two values:
 
 #%% 
 import matplotlib.pyplot as plt
@@ -21,8 +28,9 @@ register_matplotlib_converters()
 # Load the data
 db = pd.read_pickle('data/data_formatted.pkl')
 
-# Trim the NaN values
+# Remove the 'notes' column (it's not necessary at this point)
 db = db.drop(['notes'], axis=1)
+# Trim the NaN values
 db = db[~db.isin([np.nan]).any(1)]
 
 #%%
@@ -55,8 +63,14 @@ def moving_avg(x, nbins=2):
     -------
     Array representing a moving average
     """
+    # Copy the array
     y = np.array(x)
-    y = np.insert(y, 0, [np.nan]*2*nbins)
+
+    # Pad the front and back with NaN's
+    y = np.insert(y, 0, [np.nan]*nbins)
+    y = np.insert(y, len(y), [np.nan]*nbins)
+
+    # Convolve with with an array of 1's
     width = 2*nbins + 1
     return np.convolve(y, np.ones(width), 'valid') / width
    
@@ -111,8 +125,6 @@ offset_vals.append(off_prcnt(db_2016['Car MPG'],db_2016['Real MPG']))
 offset_vals.append(off_prcnt(db_2017['Car MPG'],db_2017['Real MPG']))
 yr = 2014
 for vals in offset_vals:
-    # Remove NaNs
-    vals = vals[~np.isnan(vals)]
     # Compute average and std. deviation
     avg = np.average(vals)
     sigma = np.var(vals)
@@ -164,3 +176,6 @@ plt.legend()
 # happened sometime near the end of 2015. On the otherhand, it could be that my
 # car decided to trust me with the "true" MPG. I don't know, but it's interesting
 # to see that it did in fact change over time.
+
+
+#%%
