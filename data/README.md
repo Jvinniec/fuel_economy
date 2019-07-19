@@ -1,4 +1,4 @@
-This folder contains the raw and formatted data that is used in all the other parts of this repository.
+This folder contains the raw and formatted data that is used in all the other parts of this repository. To load the data and process it, I'm using [Pandas](https://pandas.pydata.org/).
 
 ## File Descriptions
 * **data_raw.csv**: Raw, unformatted data as it was collected

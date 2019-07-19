@@ -5,7 +5,8 @@ This repository serves as a place where I can use a sample of data that I collec
 There are a few directories that highlights for specific tools:
 
 ## data
-Raw and formatted data as well as the script used to convert raw data into formatted data using Pandas.
+Raw and formatted data as well as the script used to convert raw data into formatted data using [Pandas](https://pandas.pydata.org/).
 
 ## visualization
-Visualizations of the underlying data with matplotlib.
+Visualizations of the underlying data with [matplotlib](https://matplotlib.org/).
+
