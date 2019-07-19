@@ -6,3 +6,6 @@ There are a few directories that highlights for specific tools:
 
 ## data
 Raw and formatted data as well as the script used to convert raw data into formatted data using Pandas.
+
+## visualization
+Visualizations of the underlying data with matplotlib.
