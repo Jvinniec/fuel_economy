@@ -177,5 +177,164 @@ plt.legend()
 # car decided to trust me with the "true" MPG. I don't know, but it's interesting
 # to see that it did in fact change over time.
 
+#%% [markdown]
+# ## Correlating with Date
+# Before we can process this data more deeply, we need to figure out the best 
+# way to format the date information. We will see which of the following has the
+# best correlation with the MPG:
+#
+# 1. Day of year
+# 1. Day of month (1-31)
+# 1. Day of week (0-6)
+# 1. Week of year
+# 1. Year (raw year)
+# 1. Month (0-11)
+# 1. Quarter (i.e. financial quarter)
+#
+#
+# ### Predictions
+# Before we begin, let's make some predictions! Specifically, here's how I
+# think the above will shake out:
+#
+# 1. **Day of year**: Good, the values appear to cycle yearly
+# 1. **Day of month**: Not good, the relationship looks like it cycles yearly, not monthly
+# 1. **Day of week**: Not good, again, it's cyclical by year, not week
+# 1. **Week of year**: Good, the values cycle yearly
+# 1. **Year**: Not good
+# 1. **Month**: Good, the values cycle yearly
+# 1. **Quarter**: Good, quarter cycles yearly
+#
+#
+# Regarding the yearly based values ('Day of year', 'Month', 'Week of year', 
+# Quarter') I think the most correlating way would be to do winter, fall/spring, 
+# and summer last. That gives probably the best correlation.
+
+#%% [markdown]
+# ### Gener
+# To do this I will first generate a method that will take care of the plotting
+# and the computation of the correlation between the two values
+
+#%%
+def correlation(par1, par2, xlabel='', ylabel='', title='', corr_list=None):
+    """
+    Computes the correlation between 'par1' and 'par2'. This method also plots
+    the distribution of the two parameters.
+
+    Parameters
+    ----------
+    par1 : numpy.array
+        Array of values
+    par2 : numpy.array
+        Array of values
+    xlabel : str
+        Label for par1
+    ylabel : str
+        Label for par2
+    title : str
+        Prefix for the plot title
+    corr_list : numpy.array
+        List of correlations to add this value to
+
+    Returns
+    -------
+    Correlation coefficient between 'par1' and 'par2'
+    """
+    # Compute the correlation
+    corr = np.corrcoef(par1, par2)[0][1]
+
+    # Plot the variables with each other
+    plt.xlabel(xlabel)
+    plt.ylabel(ylabel)
+    plt.title(f'{title}: |corr| = {np.abs(corr)}')
+    plt.scatter(par1, par2, marker='.', color='blue')
+
+    # Add the correlation to the list
+    if corr_list is not None:
+        corr_list.append([np.abs(corr), title])
+    return corr
+
+#%% [markdown]
+# Now that we have that out of the way, let's generate those plots!
+
+#%%
+# Keep track of the correlations so that we can sort them later
+corr_list = []
+
+#%%
+date1 = [d.dayofyear for d in db.Date]
+corr1 = correlation(date1, db['Real MPG'], xlabel='Day of Year', ylabel='Real MPG', title='DoY vs. MPG (1)', corr_list=corr_list)
+
+#%%
+date2 = [d.day for d in db.Date]
+corr2 = correlation(date2, db['Real MPG'], xlabel='Day of Month', ylabel='Real MPG', title='DoM vs. MPG (1)', corr_list=corr_list)
+
+#%%
+date3 = [d.dayofweek for d in db.Date]
+corr3 = correlation(date3, db['Real MPG'], xlabel='Day of Week', ylabel='Real MPG', title='DoW vs. MPG (1)', corr_list=corr_list)
+
+#%%
+date4 = [d.weekofyear for d in db.Date]
+corr4 = correlation(date4, db['Real MPG'], xlabel='Week', ylabel='Real MPG', title='Week vs. MPG (1)', corr_list=corr_list)
+
+#%%
+date5 = [d.year for d in db.Date]
+corr5 = correlation(date5, db['Real MPG'], xlabel='Year', ylabel='Real MPG', title='Year vs. MPG (1)', corr_list=corr_list)
+
+#%%
+date6 = [d.month for d in db.Date]
+corr6 = correlation(date6, db['Real MPG'], xlabel='Month', ylabel='Real MPG', title='Month vs. MPG (1)', corr_list=corr_list)
+
+#%%
+date7 = [d.quarter for d in db.Date]
+corr7 = correlation(date7, db['Real MPG'], xlabel='Quarter', ylabel='Real MPG', title='Quarter vs. MPG (1)', corr_list=corr_list)
+
+#%% [markdown]
+# Okay, now let's try shifting the dates back by a quarter of a year (91 days)
+# in order to put the yearly cycle more in line with what I think it should be
+
+#%%
+dates = db.Date - pd.to_timedelta(91, unit='d')
+date1 = [d.dayofyear for d in dates]
+corr1 = correlation(date1, db['Real MPG'], xlabel='Day of Year', ylabel='Real MPG', title='DoY vs. MPG (2)', corr_list=corr_list)
+
+#%%
+date2 = [d.day for d in dates]
+corr2 = correlation(date2, db['Real MPG'], xlabel='Day of Month', ylabel='Real MPG', title='DoM vs. MPG (2)', corr_list=corr_list)
+
+#%% [markdown]
+# Ignore the 'date of week' as it shouldn't be any different
+
+#%%
+date4 = [d.weekofyear for d in dates]
+corr4 = correlation(date4, db['Real MPG'], xlabel='Week', ylabel='Real MPG', title='Week vs. MPG (2)', corr_list=corr_list)
+
+#%% [markdown]
+# Note that we'll ignore the 'year' plot as it doesn't make sense any longer
+
+#%%
+dates = db.Date - pd.to_timedelta(3, unit='m')
+date6 = [d.month for d in dates]
+corr6 = correlation(date6, db['Real MPG'], xlabel='Month', ylabel='Real MPG', title='Month vs. MPG (2)', corr_list=corr_list)
+
+#%%
+date7 = [d.quarter-1 for d in db.Date]
+date7 = [(d+4 if d <= 0 else d) for d in date7]
+corr7 = correlation(date7, db['Real MPG'], xlabel='Quarter', ylabel='Real MPG', title='Quarter vs. MPG (2)', corr_list=corr_list)
+
+#%% [markdown]
+# Taking the above values, let us sort them and then print the results. This 
+# should show the order of how best to represent the date for predicting the
+# value of MPG.
+
+#%%
+corr_sorted = np.sort(corr_list, axis=0)
+for corr in reversed(corr_sorted):
+    print(f'{corr[1]:20s}: {corr[0]}')
+
+#%% [markdown]
+# Here are the take-aways:
+# * As expected, shifting the dates yields a better correlation for pretty much
+#   every variable.
+# * 'week of year' and the raw 'year' values appear to be the best variables
 
 #%%
