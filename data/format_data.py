@@ -1,5 +1,5 @@
 #%% [markdown]
-# # Prepparing the data
+# # Preparing the data
 # This notebook is intended to describe how I've collected the data and shows the
 # preliminary process of getting it into the format I will use for the rest of
 # the notebooks in this series. By the end, we should be left with a Pandas
