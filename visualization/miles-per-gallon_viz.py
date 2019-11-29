@@ -210,9 +210,9 @@ plt.legend()
 # and summer last. That gives probably the best correlation.
 
 #%% [markdown]
-# ### Gener
+# ### Generic correlation plots
 # To do this I will first generate a method that will take care of the plotting
-# and the computation of the correlation between the two values
+# and the computation of the correlation between two values
 
 #%%
 def correlation(par1, par2, xlabel='', ylabel='', title='', corr_list=None):
@@ -288,6 +288,7 @@ corr6 = correlation(date6, db['Real MPG'], xlabel='Month', ylabel='Real MPG', ti
 date7 = [d.quarter for d in db.Date]
 corr7 = correlation(date7, db['Real MPG'], xlabel='Quarter', ylabel='Real MPG', title='Quarter vs. MPG (1)', corr_list=corr_list)
 
+
 #%% [markdown]
 # Okay, now let's try shifting the dates back by a quarter of a year (91 days)
 # in order to put the yearly cycle more in line with what I think it should be
@@ -324,7 +325,8 @@ corr7 = correlation(date7, db['Real MPG'], xlabel='Quarter', ylabel='Real MPG', 
 #%% [markdown]
 # Taking the above values, let us sort them and then print the results. This 
 # should show the order of how best to represent the date for predicting the
-# value of MPG.
+# value of MPG. Note that I'm showing both correlations without the date shifted
+# (1) and with the date shifted back 3 months (2).
 
 #%%
 corr_sorted = np.sort(corr_list, axis=0)
@@ -336,5 +338,11 @@ for corr in reversed(corr_sorted):
 # * As expected, shifting the dates yields a better correlation for pretty much
 #   every variable.
 # * 'week of year' and the raw 'year' values appear to be the best variables
+# * There is no significant fluctuation in MPG on a monthly or weekly time scale.
+#
+#
+# It's worth noting that ideally we wouldn't want to shift the dates. What we 
+# would really like to do is have a method that does not rely on a linear
+# relationship between the two variables. We can investigate this when we start
+# building our ML models.
 
-#%%
