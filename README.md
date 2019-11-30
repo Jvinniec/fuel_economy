@@ -21,6 +21,9 @@ Visualizations of the underlying data with **matplotlib**.
 ## [miles_per_gallon](miles_per_gallon/)
 Investigating whether or not it is possible to predict MPG for my car using scikit-learn and TensorFlow.
 
+## [price_per_gallon](price_per_gallon/)
+Investigating whether or not it is possible to predict price per gallon for my car using scikit-learn and TensorFlow.
+
 # A note on file names
 Note that each file also contains information about the specific tools it is highlighting:
 
