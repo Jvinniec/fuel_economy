@@ -9,6 +9,19 @@ The following tools are used:
 * [Scikit-learn](https://scikit-learn.org/stable/index.html)
 * [TensorFlow](https://www.tensorflow.org/)
 
+# Data Collection
+The data that I will be looking at here was collected over about 4 years. It consists of all the information about my personal vehicle's fuel economy. The car in question was a 2012 Chevy Cruze (Eco), that I had obtained secondhand. The data was collected and stored in a Google Sheet for the purposes of easily plotting quick results and the ability to access it from pretty much anywhere I had an internet connection. I could also export the data as a CSV file for easy loading into a Pandas dataframe. Data includes:
+* Date
+* Fuel put into car
+* Miles driven since last fill up
+* Location of fill up (used to derive latitude/longitude of filling station)
+* Car estimated MPG
+* Price/Gallon of fuel,
+* Avgerage speed since previous fill up
+* Car estimated fuel consumption since last fill up
+* Market price-per-barrel
+* Total paid
+
 # What is covered
 There are a few directories that highlight specific topics of investigation. If you're looking for a cohesive story, I advise reading them in order.
 
